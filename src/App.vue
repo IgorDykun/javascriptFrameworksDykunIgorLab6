@@ -26,14 +26,20 @@ export default defineComponent({
     RegistrationForm,
     ParticipantsTable,
   },
-  setup() {
-    const participants = ref<Participant[]>([]);
+setup() {
+  const participants = ref<Participant[]>(JSON.parse(localStorage.getItem('participants') || '[]'));
 
-    const addParticipant = (newParticipant: Participant) => {
-      participants.value.push(newParticipant);
-    };
+  const addParticipant = (newParticipant: Participant) => {
+    if (participants.value.some(p => p.email === newParticipant.email)) {
+      alert('This email is already registered.');
+      return;
+    }
+    participants.value.push(newParticipant);
+    localStorage.setItem('participants', JSON.stringify(participants.value));
+  };
 
-    return { participants, addParticipant };
+  return { participants, addParticipant };
+}
   },
-});
+);
 </script>
